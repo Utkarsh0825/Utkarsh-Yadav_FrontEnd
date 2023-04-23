@@ -1,0 +1,11 @@
+The List component is a simple React component that displays a list of items. It takes an array of items as a prop and renders each item as a SingleListItem component. The SingleListItem component displays the text of the item and has an onClickHandler prop that is called when the item is clicked.
+
+When an item is clicked, the List component updates its state to store the index of the selected item. This is done using the useState hook, which allows the component to manage its own state. The useState hook returns an array with two elements: the current state value and a function to update the state value. In this case, the state value is the index of the selected item and the function to update it is called setSelectedIndex.
+
+The List component also uses the useEffect hook to reset the selected item when the list of items changes. The useEffect hook takes two arguments: a callback function and an array of dependencies. The callback function is called whenever one of the dependencies changes. In this case, the dependency is the items prop, so the callback function is called whenever the list of items changes. The callback function sets the selected item to null, effectively resetting it.
+
+The SingleListItem component uses the isSelected prop to determine whether it should display a green or red background color. If the isSelected prop is true, the background color is set to green; otherwise, it is set to red.
+
+The List component is wrapped in a call to the memo function, which is a higher-order component that prevents unnecessary re-renders. This can improve performance in some cases by avoiding unnecessary updates.
+
+In summary, the List component displays a list of items and allows users to select an item by clicking on it. The selected item is highlighted with a green background color. The component uses React hooks to manage its state and to reset the selected item when necessary.

@@ -1,0 +1,86 @@
+I see that you have shared a React component with me. Here are some suggestions to optimize and/or modify the code:
+
+In the WrappedListComponent, the useState hook is being used incorrectly. The first element of the array returned by useState is the state variable, and the second element is the function to update the state. So, it should be const [selectedIndex, setSelectedIndex] = useState(); instead of const [setSelectedIndex, selectedIndex] = useState();.
+
+In the WrappedSingleListItem component, the onClick prop should be onClick={() => onClickHandler(index)} instead of onClick={onClickHandler(index)}. This ensures that the function is called only when the element is clicked, rather than being called immediately when the component is rendered.
+
+In the WrappedListComponent, you can add a key prop to each SingleListItem to improve performance. The key should be a unique identifier for each item in the list. For example: <SingleListItem key={item.id} ... />.
+
+In the WrappedListComponent, you can pass the isSelected prop to each SingleListItem as a boolean value, rather than passing the index of the selected item. For example: <SingleListItem isSelected={selectedIndex === index} ... />.
+
+I hope these suggestions help you optimize and/or modify your code!
+
+
+Code
+
+import React, { useState, useEffect, memo } from 'react';
+import PropTypes from 'prop-types';
+
+// Single List Item
+const WrappedSingleListItem = ({
+  index,
+  isSelected,
+  onClickHandler,
+  text,
+}) => {
+  return (
+    <li
+      style={{ backgroundColor: isSelected ? 'green' : 'red'}}
+      onClick={() => onClickHandler(index)}
+    >
+      {text}
+    </li>
+  );
+};
+
+WrappedSingleListItem.propTypes = {
+  index: PropTypes.number,
+  isSelected: PropTypes.bool,
+  onClickHandler: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+};
+
+const SingleListItem = memo(WrappedSingleListItem);
+
+// List Component
+const WrappedListComponent = ({
+  items,
+}) => {
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [items]);
+
+  const handleClick = index => {
+    setSelectedIndex(index);
+  };
+
+  return (
+    <ul style={{ textAlign: 'left' }}>
+      {items.map((item, index) => (
+        <SingleListItem
+          key={index}
+          onClickHandler={() => handleClick(index)}
+          text={item.text}
+          index={index}
+          isSelected={selectedIndex === index}
+        />
+      ))}
+    </ul>
+  )
+};
+
+WrappedListComponent.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.shape({
+    text: PropTypes.string.isRequired,
+  })),
+};
+
+WrappedListComponent.defaultProps = {
+  items: null,
+};
+
+const List = memo(WrappedListComponent);
+
+export default List;
